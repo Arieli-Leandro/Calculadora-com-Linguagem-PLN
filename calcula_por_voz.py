@@ -62,10 +62,10 @@ def ouvir_numeros(qtd_numero):
                 continue
             except Exception as e:
                 print("Erro:", e)
-                return ["Invalido", []]
+                return [False, []]
                 
     print(lista_numeros) #TIRAR ISSO DPS
-    return ["Valido", lista_numeros]
+    return [True, lista_numeros]
 # fecha função
     
 
@@ -98,13 +98,11 @@ def ouvir_operador():
             else:
                 print("Operador não reconhecido")
                 winsound.Beep(440, 1000)
-                palavra_operador = "Invalido"
-                return [palavra_operador, False, -1]
+                return [None, False, -1]
         except sr.UnknownValueError:
             print("Saída em formato não esperado!")
             winsound.Beep(440, 1000)
-            palavra_operador = "Invalido"
-            return [palavra_operador, False, -1]
+            return [None, False, -1]
             
     
 
@@ -116,11 +114,11 @@ if __name__ == "__main__":
     #O Operador já está funcionando
     while verifica_operador == False:
         parcial = ouvir_operador()
-        operador = parcial[0]
+        operador_conta = parcial[0]
         verifica_operador = parcial[1]
         qtd_numeros = parcial[2]
 
-        if verifica_operador == True and operador != "Invalido":
+        if verifica_operador == True and verifica_operador != False:
             break
     
 
@@ -133,10 +131,10 @@ if __name__ == "__main__":
 
         print(lista_numeros)
 
-        if verifica_numero_valido == "Valido":
+        if verifica_numero_valido == True:
             verifica_numeros = True
 
-        if verifica_numeros == True and verifica_numero_valido != "Invalido":
+        if verifica_numeros == True and verifica_numero_valido != False:
             break
 
     #resultado_conta = calcula_conta(operador, lista_numeros)
