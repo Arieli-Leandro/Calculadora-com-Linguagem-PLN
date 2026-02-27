@@ -10,30 +10,14 @@ OPERACAO_UNARIA = 1
 OPERACAO_BINARIA = 2
 
 
-def calcula_conta(operador, numero1, numero2):
+def calcula_conta(operador, lista_numeros):
 
     #garantindo que o operador esteja no padrão
     operador = operador.lower()
+    return 
 
-    resultado_final = 0
+def ouvir_numeros(qtd_numero): 
 
-    match operador:
-
-        case "soma":
-            resultado_final = numero1 + numero2
-        case "subtração":
-            resultado_final = numero1 - numero2
-        case "divisão":
-            resultado_final = numero1 / numero2
-        case "multiplicação":
-            resultado_final = numero1 * numero2
-        case _:
-            print("Não foi possível realizar a conta")
-            exit(1)
-
-    return resultado_final
-
-def ouvir_numeros(qtd_numero): #preciso retornar true ou false, os Números, e preciso colocar eles numa lista com while
     #Habilita o microfone do usuário
     microfone = sr.Recognizer()
 
@@ -44,7 +28,7 @@ def ouvir_numeros(qtd_numero): #preciso retornar true ou false, os Números, e p
         for i in range(qtd_numero):
             microfone.adjust_for_ambient_noise(source)
 
-            print("Diga o número:")
+            print(f"Diga o {(i + 1)} número:")
             audio = microfone.listen(source)
 
             try:
@@ -80,12 +64,12 @@ def ouvir_numeros(qtd_numero): #preciso retornar true ou false, os Números, e p
                 print("Erro:", e)
                 return ["Invalido", []]
                 
-    print(lista_numeros)
+    print(lista_numeros) #TIRAR ISSO DPS
     return ["Valido", lista_numeros]
 # fecha função
     
 
-def ouvir_operador(): #preciso retornar true ou false E TAMBÉM O OPERADOR!!!!!!!!!!!
+def ouvir_operador():
 
     #Habilita o microfone do usuário
     microfone = sr.Recognizer()
@@ -118,7 +102,9 @@ def ouvir_operador(): #preciso retornar true ou false E TAMBÉM O OPERADOR!!!!!!
                 return [palavra_operador, False, -1]
         except sr.UnknownValueError:
             print("Saída em formato não esperado!")
-            exit(1)
+            winsound.Beep(440, 1000)
+            palavra_operador = "Invalido"
+            return [palavra_operador, False, -1]
             
     
 
@@ -138,14 +124,12 @@ if __name__ == "__main__":
             break
     
 
-    #Os números estão funcionando, porém sendo uma lista de lista
+    #Os números estão funcionando (gerando uma lista normal, sem ser lista d lista)
     while verifica_numeros == False:
-
-        lista_numeros = []
 
         parcial_numerico = ouvir_numeros(qtd_numeros)
         verifica_numero_valido = parcial_numerico[0]
-        lista_numeros.append(parcial_numerico[1])
+        lista_numeros = parcial_numerico[1]
 
         print(lista_numeros)
 
@@ -154,4 +138,6 @@ if __name__ == "__main__":
 
         if verifica_numeros == True and verifica_numero_valido != "Invalido":
             break
+
+    #resultado_conta = calcula_conta(operador, lista_numeros)
     
