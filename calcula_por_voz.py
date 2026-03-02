@@ -1,6 +1,7 @@
 import speech_recognition as sr
 import webbrowser
 from text_to_num import text2num
+import math
 import re
 import winsound
 import os
@@ -13,12 +14,27 @@ OPERACAO_BINARIA = 2
 def calcula_conta(operador, qtd_numeros, lista_numeros):
 
     #Estou utilizando a string operador aqui só para poder fazer um match case p/ calcular as contas
-
     #garantindo que o operador esteja no padrão
     operador = operador.lower()
 
     if qtd_numeros == 1:
-        pass #Adicionar contas unárias
+        match operador:
+            case "seno":
+                pass
+            case "cosseno":
+                pass
+            case "raiz quadrada":
+                pass
+            case "raiz cúbica":
+                pass
+            case "tangente":
+                pass
+            case "arctangente":
+                pass
+            case "secante":
+                pass
+            case "cossecante":
+                pass
     else:
         match operador:
             case "soma":
@@ -33,9 +49,8 @@ def calcula_conta(operador, qtd_numeros, lista_numeros):
                 print("Falha na execução da conta!")
                 exit(1)
 
-    #garantir que daqui só sai float
-    return resultado
-
+    #Tenho que garantir que daqui só sai float
+    return float(resultado)
 
 def ouvir_numeros(qtd_numero): 
 
@@ -86,9 +101,7 @@ def ouvir_numeros(qtd_numero):
                 return [False, []]
                 
     print(lista_numeros) #TIRAR ISSO DPS
-    return [True, lista_numeros]
-# fecha função
-    
+    return [True, lista_numeros]    
 
 def ouvir_operador():
 
@@ -125,14 +138,27 @@ def ouvir_operador():
             winsound.Beep(440, 1000)
             return [None, False, -1]
             
-    
+#a partir do operador ele retorna seu respectivo símbolo
+def get_symbol(operador):
+
+    match operador:
+        case "soma":
+            op_symbol = "+"
+        case "subtração":
+            op_symbol = "-"
+        case "divisão":
+            op_symbol = "/"
+        case "multiplicação":
+            op_symbol = "*"
+
+
+    return op_symbol
 
 if __name__ == "__main__":
 
     verifica_operador = False
     verifica_numeros = False
 
-    #O Operador já está funcionando
     while verifica_operador == False:
         parcial = ouvir_operador()
         operador_conta = parcial[0]
@@ -142,8 +168,6 @@ if __name__ == "__main__":
         if verifica_operador == True and verifica_operador != False:
             break
     
-
-    #Os números estão funcionando (gerando uma lista normal, sem ser lista d lista)
     while verifica_numeros == False:
 
         parcial_numerico = ouvir_numeros(qtd_numeros)
@@ -160,9 +184,11 @@ if __name__ == "__main__":
 
     resultado_conta = calcula_conta(operador_conta, qtd_numeros, lista_numeros)
 
+    symbol = get_symbol(operador_conta)
+
     if qtd_numeros == 1:
-        print(f"O resultado da conta {operador_conta} de {lista_numeros[0]} = {resultado_conta}")
+        print(f"O resultado da conta {symbol} de {lista_numeros[0]} = {resultado_conta}")
     else:
-        print(f"O resultado da conta {lista_numeros[0]} {operador_conta} {lista_numeros[1]} = {resultado_conta}")
+        print(f"O resultado da conta {lista_numeros[0]} {symbol} {lista_numeros[1]} = {resultado_conta}")
 
 #
