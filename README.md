@@ -17,7 +17,7 @@ A aplicação utiliza técnicas básicas de PLN para:
 - Converter números escritos por extenso em valores numéricos
 
 O reconhecimento de padrões linguísticos, a normalização do texto (lowercase, tratamento de vírgula/ponto) e a conversão semântica de números demonstram a aplicação prática de conceitos fundamentais de PLN.
-O projeto serviu como exercício prático para compreender como sistemas interpretam linguagem humana e a transformam em instruções computacionais.
+O projeto serviu como exercício prático para compreender como sistemas interpretam linguagem humana e as transformam em instruções computacionais.
 
 ---
 🚀 Funcionalidades
