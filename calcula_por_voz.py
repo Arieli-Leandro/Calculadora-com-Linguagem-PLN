@@ -10,11 +10,32 @@ OPERACAO_UNARIA = 1
 OPERACAO_BINARIA = 2
 
 
-def calcula_conta(operador, lista_numeros):
+def calcula_conta(operador, qtd_numeros, lista_numeros):
+
+    #Estou utilizando a string operador aqui só para poder fazer um match case p/ calcular as contas
 
     #garantindo que o operador esteja no padrão
     operador = operador.lower()
-    return 
+
+    if qtd_numeros == 1:
+        pass #Adicionar contas unárias
+    else:
+        match operador:
+            case "soma":
+                resultado = lista_numeros[0] + lista_numeros[1]
+            case "subtração":
+                resultado = lista_numeros[0] - lista_numeros[1]
+            case "divisão":
+                resultado = lista_numeros[0] / lista_numeros[1]                
+            case "multiplicação":
+                resultado = lista_numeros[0] * lista_numeros[1]
+            case _:
+                print("Falha na execução da conta!")
+                exit(1)
+
+    #garantir que daqui só sai float
+    return resultado
+
 
 def ouvir_numeros(qtd_numero): 
 
@@ -137,5 +158,11 @@ if __name__ == "__main__":
         if verifica_numeros == True and verifica_numero_valido != False:
             break
 
-    #resultado_conta = calcula_conta(operador, lista_numeros)
-    
+    resultado_conta = calcula_conta(operador_conta, qtd_numeros, lista_numeros)
+
+    if qtd_numeros == 1:
+        print(f"O resultado da conta {operador_conta} de {lista_numeros[0]} = {resultado_conta}")
+    else:
+        print(f"O resultado da conta {lista_numeros[0]} {operador_conta} {lista_numeros[1]} = {resultado_conta}")
+
+#
