@@ -22,32 +22,27 @@ O projeto serviu como exercício prático para compreender como sistemas interpr
 ---
 🚀 Funcionalidades
 
-🎤 Reconhecimento de voz com SpeechRecognition
-🔢 Conversão de números falados por extenso (text2num)
+- Reconhecimento de voz com SpeechRecognition
+- Conversão de números falados por extenso (text2num)
 
 ---
 
 📦 Instalação
-git clone https://github.com/seu-usuario/calculadora-voz.git
-cd calculadora-voz
+git clone "https://github.com/Arieli-Leandro/calcula_por_voz.git"
+cd calcula_por_voz
 pip install SpeechRecognition text2num pyaudio
 ▶️ Execução
-python main.py
+python calcula_por_voz.py
 
 O programa irá:
-
-Solicitar o operador matemático.
-
-Solicitar os números.
-
-Exibir o resultado da operação.
+- Solicitar o operador matemático.
+- Solicitar os números.
+- Exibir o resultado da operação.
 
 ---
 
 ⚠️ Observações
 
-Requer conexão com internet (Google Speech Recognition).
-
-Atualmente compatível com Windows.
-
-Operações trigonométricas ainda não implementadas.
+- Requer conexão com internet (Google Speech Recognition).
+- Atualmente compatível com Windows.
+- Operações trigonométricas ainda não implementadas.
