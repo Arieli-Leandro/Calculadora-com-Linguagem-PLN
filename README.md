@@ -29,9 +29,13 @@ O projeto serviu como exercício prático para compreender como sistemas interpr
 
 📦 Instalação
 git clone "https://github.com/Arieli-Leandro/calcula_por_voz.git"
+
 cd calcula_por_voz
+
 pip install SpeechRecognition text2num pyaudio
+
 ▶️ Execução
+
 python calcula_por_voz.py
 
 O programa irá:
