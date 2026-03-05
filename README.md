@@ -38,7 +38,9 @@ pip install SpeechRecognition text2num pyaudio
 
 ▶️ Execução
 
+```
 python calcula_por_voz.py
+```
 
 O programa irá:
 - Solicitar o operador matemático.
