@@ -28,11 +28,13 @@ O projeto serviu como exercício prático para compreender como sistemas interpr
 ---
 
 📦 Instalação
+```
 git clone "https://github.com/Arieli-Leandro/calcula_por_voz.git"
 
 cd calcula_por_voz
 
 pip install SpeechRecognition text2num pyaudio
+```
 
 ▶️ Execução
 
@@ -47,6 +49,4 @@ O programa irá:
 
 ⚠️ Observações
 
-- Requer conexão com internet (Google Speech Recognition).
-- Atualmente compatível com Windows.
-- Operações trigonométricas ainda não implementadas.
+- O Sistema é sensível à fala, então alguns números ele acaba não reconhecendo, por isso é preciso repetir a fala do número em voz alta
