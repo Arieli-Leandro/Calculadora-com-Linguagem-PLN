@@ -1,56 +1,197 @@
 import speech_recognition as sr
-import webbrowser
 from text_to_num import text2num
 import math
-import re
 import winsound
-import os
-
 
 OPERACAO_UNARIA = 1
 OPERACAO_BINARIA = 2
 
+#Vai decidir os casos de divisão e exponenciação
+def decisao_de_caso(numero1, numero2, operador):
+
+    verifica_decisao = False
+
+    microfone = sr.Recognizer()
+
+    #Só vai parar se realmente conseguirmos extrair a decisão
+    while verifica_decisao == False:
+
+        match operador:
+            case "subtração":
+                with sr.Microphone() as source:
+                    microfone.adjust_for_ambient_noise(source)
+
+                    print(f"Opção 1: Subtrair {numero1} por {numero2}")
+                    print(f"Opção 2: Subtrair {numero2} por {numero1}")
+                    print("Por favor diga Opção 1 ou Opção 2")
+
+                    decisao_gravada = microfone.listen(source)
+
+                    try:
+                        #Passa a variável para o algoritmo reconhecer o padrão
+                        decisao_final = microfone.recognize_google(decisao_gravada, language="pt-BR")
+                        decisao_final = decisao_final.lower()
+
+                        if decisao_final == "opção 1" or decisao_final == "opção um":
+                            verifica_decisao = True
+                            caso_final = 1
+                        elif decisao_final == "opção 2" or decisao_final == "opção dois":
+                            verifica_decisao = True
+                            caso_final = 2
+                        else:
+                            print("Diga apenas uma das opções válida!")
+                    except sr.UnknownValueError:
+                        print("Decisão não reconhecida")
+                        winsound.Beep(440, 1000)
+            case "divisão":
+
+                with sr.Microphone() as source:
+                    microfone.adjust_for_ambient_noise(source)
+
+                    print(f"Opção 1: Dividir {numero1} pelo {numero2}")
+                    print(f"Opção 2: Dividir {numero2} pelo {numero1}")
+                    print("Por favor diga Opção 1 ou Opção 2")
+
+                    decisao_gravada = microfone.listen(source)
+
+                    try:
+                        #Passa a variável para o algoritmo reconhecer o padrão
+                        decisao_final = microfone.recognize_google(decisao_gravada, language="pt-BR")
+                        decisao_final = decisao_final.lower()
+
+                        if decisao_final == "opção 1" or decisao_final == "opção um":
+                            verifica_decisao = True
+                            caso_final = 1
+                        elif decisao_final == "opção 2" or decisao_final == "opção dois":
+                            verifica_decisao = True
+                            caso_final = 2
+                        else:
+                            print("Diga apenas uma das opções válida!")
+                    except sr.UnknownValueError:
+                        print("Decisão não reconhecida")
+                        winsound.Beep(440, 1000)
+            case "exponenciação":
+                with sr.Microphone() as source:
+                    microfone.adjust_for_ambient_noise(source)
+
+                    print(f"Opção 1: {numero1} elevado à {numero2} ({numero1} - base, {numero2} - expoente)")
+                    print(f"Opção 2: {numero2} elevado à {numero1} ({numero2} - base, {numero1} - expoente)")
+                    print("Por favor diga Opção 1 ou Opção 2")
+
+                    decisao_gravada = microfone.listen(source)
+
+                    try:
+                        #Passa a variável para o algoritmo reconhecer o padrão
+                        decisao_final = microfone.recognize_google(decisao_gravada, language="pt-BR")
+                        decisao_final = decisao_final.lower()
+
+                        if decisao_final == "opção 1" or decisao_final == "opção um":
+                            verifica_decisao = True
+                            caso_final = 1
+                        elif decisao_final == "opção 2" or decisao_final == "opção dois":
+                            verifica_decisao = True
+                            caso_final = 2
+                        else:
+                            print("Diga apenas uma das opções válida!")
+                    except sr.UnknownValueError:
+                        print("Decisão não reconhecida")
+                        winsound.Beep(440, 1000)
+
+        #Interrompe o laço a partir do momento que foi reconhecido uma das opções válidas
+        if verifica_decisao == True:
+            break
+
+    #Caso 1: primeiro pelo segundo
+    #Caso 2: segundo pelo primeiro
+    #Ambos casos se encaixam nas 2 requisições, sendo tratado (num1 == num2) na função exterior
+    return caso_final
+
+#Para garantir que funções como sqrt vão receber um número positivo
+def transforma_positivo(numero):
+
+    numero = numero * (-1)
+    return numero
 
 def calcula_conta(operador, qtd_numeros, lista_numeros):
+
+    #Caso 1: Normal num1 op num2
+    houve_troca = False
+
+    #Utilizando variáveis para o caso de um dia precisar mudar
+    primeiro_numero = lista_numeros[0]
+    segundo_numero = lista_numeros[1]
 
     #Estou utilizando a string operador aqui só para poder fazer um match case p/ calcular as contas
     #garantindo que o operador esteja no padrão
     operador = operador.lower()
 
+    #Aqui que eu pergunto os casos de divisão e exponenciação
     if qtd_numeros == 1:
         match operador:
             case "seno":
-                pass
+                resultado = math.sin(primeiro_numero)
             case "cosseno":
-                pass
+                resultado = math.cos(primeiro_numero)
             case "raiz quadrada":
-                pass
+
+                if primeiro_numero < 0:
+                    primeiro_numero = transforma_positivo(primeiro_numero)
+                resultado = math.sqrt(primeiro_numero)
+
             case "raiz cúbica":
-                pass
+                resultado = math.cbrt(primeiro_numero)
             case "tangente":
-                pass
-            case "arctangente":
-                pass
-            case "secante":
-                pass
-            case "cossecante":
-                pass
+                resultado = math.tan(primeiro_numero)
     else:
         match operador:
             case "soma":
-                resultado = lista_numeros[0] + lista_numeros[1]
+                resultado = primeiro_numero + segundo_numero
             case "subtração":
-                resultado = lista_numeros[0] - lista_numeros[1]
+
+                if primeiro_numero == segundo_numero:
+                    resultado = 0
+
+                opcao_subtracao = decisao_de_caso(primeiro_numero, segundo_numero, operador)
+
+                if opcao_subtracao == 1:
+                    resultado = primeiro_numero - segundo_numero
+                elif opcao_subtracao == 2:
+                    houve_troca = True
+                    resultado = segundo_numero - primeiro_numero
             case "divisão":
-                resultado = lista_numeros[0] / lista_numeros[1]                
+
+                if primeiro_numero == segundo_numero:
+                    resultado = 1
+
+                opcao_divisao = decisao_de_caso(primeiro_numero, segundo_numero, operador)
+
+                if opcao_divisao == 1: 
+                    resultado = primeiro_numero / segundo_numero
+                elif opcao_divisao ==2:
+                    houve_troca = True
+                    resultado = segundo_numero / primeiro_numero
             case "multiplicação":
-                resultado = lista_numeros[0] * lista_numeros[1]
+                resultado = primeiro_numero * segundo_numero
+            case "exponenciação":
+                
+                if primeiro_numero == segundo_numero:
+                    resultado = math.pow(primeiro_numero, primeiro_numero)
+
+                opcao_exponenciacao = decisao_de_caso(primeiro_numero, segundo_numero, operador)
+
+                if opcao_exponenciacao == 1:
+                    resultado = math.pow(primeiro_numero, segundo_numero)
+                elif opcao_exponenciacao == 2:
+                    houve_troca = True
+                    resultado = math.pow(segundo_numero, primeiro_numero)
+
             case _:
                 print("Falha na execução da conta!")
                 exit(1)
 
-    #Tenho que garantir que daqui só sai float
-    return float(resultado)
+    #Caso houver troca entre num1 e num2, passa pra main p/ exibir corretamente
+    return [resultado, houve_troca]
+
 
 def ouvir_numeros(qtd_numero): 
 
@@ -96,11 +237,10 @@ def ouvir_numeros(qtd_numero):
                 numero = text2num(texto, "pt")
                 lista_numeros.append(numero)
                 continue
-            except Exception as e:
-                print("Erro:", e)
+            except Exception as x:
+                print("Erro:", x)
                 return [False, []]
                 
-    print(lista_numeros) #TIRAR ISSO DPS
     return [True, lista_numeros]    
 
 def ouvir_operador():
@@ -113,7 +253,11 @@ def ouvir_operador():
         #Chama um algoritmo para reduzir os ruídos de som
         microfone.adjust_for_ambient_noise(source)
 
-        print("Diga algum operador matemático: (soma/subtração/divisão/multiplicação)")
+        #Alterar para um menu de exibição
+        print("Operadores disponíveis:")
+        print("| Soma | Subtração | Divisão  | Multiplicação | Exponenciação |")
+        print("| Seno |  Cosseno  | Tangente | Raiz Quadrada |  Raiz Cúbica  |")
+        print("Escolha um Operador:")
 
         operador_falado = microfone.listen(source)
         try:
@@ -121,22 +265,43 @@ def ouvir_operador():
             palavra_operador = microfone.recognize_google(operador_falado, language="pt-BR")
             palavra_operador = palavra_operador.lower()
 
-            if "soma" in palavra_operador:
-                return [palavra_operador, True, OPERACAO_BINARIA]
-            elif "subtração" in palavra_operador:
-                return [palavra_operador, True, OPERACAO_BINARIA]
-            elif "divisão" in palavra_operador:
-                return [palavra_operador, True, OPERACAO_BINARIA]
-            elif "multiplicação" in palavra_operador:
-                return [palavra_operador, True, OPERACAO_BINARIA]
-            else:
-                print("Operador não reconhecido")
-                winsound.Beep(440, 1000)
-                return [None, False, -1]
+            verificador = True
+            #Tem que retornar (operador, verificador, binario/unario)
+            match palavra_operador:
+                case "soma":
+                    tipo_operacao = OPERACAO_BINARIA
+                case "subtração":
+                    tipo_operacao = OPERACAO_BINARIA
+                case "divisão":
+                    tipo_operacao = OPERACAO_BINARIA
+                case "multiplicação":
+                    tipo_operacao = OPERACAO_BINARIA
+                case "exponenciação":
+                    tipo_operacao = OPERACAO_BINARIA
+                case "seno":
+                    tipo_operacao = OPERACAO_UNARIA
+                case "cosseno":
+                    tipo_operacao = OPERACAO_UNARIA
+                case "tangente":
+                    tipo_operacao = OPERACAO_UNARIA
+                case "raiz quadrada":
+                    tipo_operacao = OPERACAO_UNARIA
+                case "raiz cúbica":
+                    tipo_operacao = OPERACAO_UNARIA
+                case _:
+                    print("Operador não reconhecido")
+                    winsound.Beep(440, 1000)
+                    palavra_operador = None
+                    verificador = False
+                    tipo_operacao = -1
         except sr.UnknownValueError:
             print("Saída em formato não esperado!")
             winsound.Beep(440, 1000)
-            return [None, False, -1]
+            palavra_operador = None
+            verificador = False
+            tipo_operacao = -1
+        
+    return [palavra_operador, verificador, tipo_operacao]
             
 #a partir do operador ele retorna seu respectivo símbolo
 def get_symbol(operador):
@@ -150,6 +315,21 @@ def get_symbol(operador):
             op_symbol = "/"
         case "multiplicação":
             op_symbol = "*"
+        case "exponenciação":
+            op_symbol = "**"
+        case "seno":
+            op_symbol = "sen"
+        case "cosseno":
+            op_symbol = "cos"
+        case "tangente":
+           op_symbol = "tan"
+        case "raiz quadrada":
+            op_symbol = "√"
+        case "raiz cúbica":
+            op_symbol = "∛"
+        case _:
+            print("Símbolo não encontrado!")
+            exit(1)
 
 
     return op_symbol
@@ -174,21 +354,27 @@ if __name__ == "__main__":
         verifica_numero_valido = parcial_numerico[0]
         lista_numeros = parcial_numerico[1]
 
-        print(lista_numeros)
-
         if verifica_numero_valido == True:
             verifica_numeros = True
 
         if verifica_numeros == True and verifica_numero_valido != False:
             break
 
-    resultado_conta = calcula_conta(operador_conta, qtd_numeros, lista_numeros)
+    parcial_resultado = calcula_conta(operador_conta, qtd_numeros, lista_numeros)
+    print(parcial_resultado)
 
+    resultado_conta = parcial_resultado[0]
+    troca_posicao = parcial_resultado[1]
     symbol = get_symbol(operador_conta)
 
     if qtd_numeros == 1:
-        print(f"O resultado da conta {symbol} de {lista_numeros[0]} = {resultado_conta}")
+        print(f"O resultado da conta {symbol}({lista_numeros[0]})  = {resultado_conta:2f}")
     else:
-        print(f"O resultado da conta {lista_numeros[0]} {symbol} {lista_numeros[1]} = {resultado_conta}")
 
-#
+        if troca_posicao == True:
+            #Se trocou de posição: o primeiro_numero é lista_numeros[1], o segundo_numero é lista_numeros[0]
+            auxiliar = lista_numeros[0]
+            lista_numeros[0] = lista_numeros[1]
+            lista_numeros[1] = auxiliar
+
+        print(f"O resultado da conta {lista_numeros[0]} {symbol} {lista_numeros[1]} = {resultado_conta:2f}")
