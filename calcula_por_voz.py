@@ -6,12 +6,21 @@ import winsound
 OPERACAO_UNARIA = 1
 OPERACAO_BINARIA = 2
 
+def configura_microfone(microfone):
+
+    microfone.pause_threshold = 1.2
+    microfone.energy_threshold = 300
+    microfone.dynamic_energy_threshold = True
+
+    return
+
 #Vai decidir os casos de divisão e exponenciação
 def decisao_de_caso(numero1, numero2, operador):
 
     verifica_decisao = False
 
     microfone = sr.Recognizer()
+    configura_microfone(microfone)
 
     #Só vai parar se realmente conseguirmos extrair a decisão
     while verifica_decisao == False:
@@ -197,6 +206,7 @@ def ouvir_numeros(qtd_numero):
 
     #Habilita o microfone do usuário
     microfone = sr.Recognizer()
+    configura_microfone(microfone)
 
     lista_numeros = []
 
@@ -247,6 +257,7 @@ def ouvir_operador():
 
     #Habilita o microfone do usuário
     microfone = sr.Recognizer()
+    configura_microfone(microfone)
 
     with sr.Microphone() as source:
 
@@ -361,14 +372,13 @@ if __name__ == "__main__":
             break
 
     parcial_resultado = calcula_conta(operador_conta, qtd_numeros, lista_numeros)
-    print(parcial_resultado)
 
     resultado_conta = parcial_resultado[0]
     troca_posicao = parcial_resultado[1]
     symbol = get_symbol(operador_conta)
 
     if qtd_numeros == 1:
-        print(f"O resultado da conta {symbol}({lista_numeros[0]})  = {resultado_conta:2f}")
+        print(f"O resultado da conta {symbol}({lista_numeros[0]})  = {resultado_conta:.2f}")
     else:
 
         if troca_posicao == True:
@@ -377,4 +387,4 @@ if __name__ == "__main__":
             lista_numeros[0] = lista_numeros[1]
             lista_numeros[1] = auxiliar
 
-        print(f"O resultado da conta {lista_numeros[0]} {symbol} {lista_numeros[1]} = {resultado_conta:2f}")
+        print(f"O resultado da conta {lista_numeros[0]} {symbol} {lista_numeros[1]} = {resultado_conta:.2f}")
